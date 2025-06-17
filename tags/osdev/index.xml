@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Osdev on My New Hugo Site</title>
-    <link>https://example.org/tags/osdev/</link>
-    <description>Recent content in Osdev on My New Hugo Site</description>
+    <title>Osdev on aaban akhtar</title>
+    <link>https://risotto.joeroe.io/tags/osdev/</link>
+    <description>Recent content in Osdev on aaban akhtar</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>en</language>
+    <copyright>© [Aaban Akhtar](aabanakhtar.github.io)</copyright>
     <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://example.org/tags/osdev/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://risotto.joeroe.io/tags/osdev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Quirks of x86 OSDev</title>
-      <link>https://example.org/posts/x86_quirks/</link>
+      <link>https://risotto.joeroe.io/posts/x86_quirks/</link>
       <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://example.org/posts/x86_quirks/</guid>
+      <guid>https://risotto.joeroe.io/posts/x86_quirks/</guid>
       <description>&lt;p&gt;I&amp;rsquo;m writing an operating system called &lt;strong&gt;Twig&lt;/strong&gt;, and it&amp;rsquo;s been quite the fun experience. However, there&amp;rsquo;s been a lot of friction between my codebase and the x86 architecture. The amount of code needed purely for &lt;em&gt;backwards compatibility&lt;/em&gt; reasons is surprising — and kind of annoying, too.&lt;/p&gt;&#xA;&lt;h1 id=&#34;the-8086&#34;&gt;The 8086&lt;/h1&gt;&#xA;&lt;p&gt;x86 — the architecture that most modern desktops and laptops use — is rooted in the Intel &lt;strong&gt;8086&lt;/strong&gt;, a 16-bit chip released in the &lt;strong&gt;late 1970s&lt;/strong&gt;. That legacy still echoes throughout modern systems. Even though we now have powerful 64-bit CPUs, much of the architecture still supports old 16-bit conventions to ensure software written decades ago still runs. This preservation brings with it a host of quirks for OS developers — quirks that I’ve run into firsthand while writing Twig.&lt;/p&gt;</description>
     </item>
   </channel>
