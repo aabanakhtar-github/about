@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on aaban akhtar</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on aaban akhtar</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>© [Aaban Akhtar](aabanakhtar.github.io)</copyright>
+    <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Quirks of x86 OSDev</title>
+      <link>http://localhost:1313/posts/x86_quirks/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/x86_quirks/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m writing an operating system called &amp;ldquo;Twig&amp;rdquo;, and it&amp;rsquo;s been quite the fun experience. However, there has been quite a bit of friction between my codebase and the x86 architecture. The amount of code needed for backwards&#xA;compatiblity reasons is suprising and is kind of annoying as well.&lt;/p&gt;&#xA;&lt;h1 id=&#34;the-8086&#34;&gt;The 8086&lt;/h1&gt;&#xA;&lt;p&gt;x86, which is the architecture that most modern computers use, is based on the design of the Intel 8086, a chip from the &lt;strong&gt;1970s&lt;/strong&gt;. Additionally, the original 8086 was 16 bit, which plays an interesting role in OSDev (which we&amp;rsquo;ll get into later). The fact that we have dragged this architecture so far presents some interesting design choices for OS Developers, some of which I have learned about while writing Twig.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
