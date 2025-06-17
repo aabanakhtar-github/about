@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Osdev on aaban akhtar</title>
-    <link>http://localhost:1313/tags/osdev/</link>
+    <link>http://localhost:40571/tags/osdev/</link>
     <description>Recent content in Osdev on aaban akhtar</description>
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>© [Aaban Akhtar](aabanakhtar.github.io)</copyright>
     <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/osdev/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:40571/tags/osdev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Quirks of x86 OSDev</title>
-      <link>http://localhost:1313/posts/x86_quirks/</link>
+      <link>http://localhost:40571/posts/x86_quirks/</link>
       <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/x86_quirks/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;m writing an operating system called &amp;ldquo;Twig&amp;rdquo;, and it&amp;rsquo;s been quite the fun experience. However, there has been quite a bit of friction between my codebase and the x86 architecture. The amount of code needed for backwards&#xA;compatiblity reasons is suprising and is kind of annoying as well.&lt;/p&gt;&#xA;&lt;h1 id=&#34;the-8086&#34;&gt;The 8086&lt;/h1&gt;&#xA;&lt;p&gt;x86, which is the architecture that most modern computers use, is based on the design of the Intel 8086, a chip from the &lt;strong&gt;1970s&lt;/strong&gt;. Additionally, the original 8086 was 16 bit, which plays an interesting role in OSDev (which we&amp;rsquo;ll get into later). The fact that we have dragged this architecture so far presents some interesting design choices for OS Developers, some of which I have learned about while writing Twig.&lt;/p&gt;</description>
+      <guid>http://localhost:40571/posts/x86_quirks/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m writing an operating system called &lt;strong&gt;Twig&lt;/strong&gt;, and it&amp;rsquo;s been quite the fun experience. However, there&amp;rsquo;s been a lot of friction between my codebase and the x86 architecture. The amount of code needed purely for &lt;em&gt;backwards compatibility&lt;/em&gt; reasons is surprising — and kind of annoying, too.&lt;/p&gt;&#xA;&lt;h1 id=&#34;the-8086&#34;&gt;The 8086&lt;/h1&gt;&#xA;&lt;p&gt;x86 — the architecture that most modern desktops and laptops use — is rooted in the Intel &lt;strong&gt;8086&lt;/strong&gt;, a 16-bit chip released in the &lt;strong&gt;late 1970s&lt;/strong&gt;. That legacy still echoes throughout modern systems. Even though we now have powerful 64-bit CPUs, much of the architecture still supports old 16-bit conventions to ensure software written decades ago still runs. This preservation brings with it a host of quirks for OS developers — quirks that I’ve run into firsthand while writing Twig.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
