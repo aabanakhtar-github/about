@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head><title>Quirks of x86 OSDev &ndash; aaban akhtar</title>
+<meta name="description" content="Sophomore at North Wake College and Career Academy. I&#39;m passionate about robotics, systems programming, and building impactful tech projects. This site showcases my work, ideas, and journey.">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"/>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css" integrity="sha512-IW0nhlW5MgNydsXJO40En2EoCkTTjZhI3yuODrZIc8cQ4h1XcF53PsqDHa09NqnkXuIe0Oiyyj171BqZFwISBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<link rel="stylesheet" href="https://risotto.joeroe.io/css/palettes/gruvbox-dark.css">
+<link rel="stylesheet" href="https://risotto.joeroe.io/css/risotto.css">
+<link rel="stylesheet" href="https://risotto.joeroe.io/css/custom.css">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta property="og:title" content="Quirks of x86 OSDev &ndash; aaban akhtar" />
+<meta property="og:url" content="https://risotto.joeroe.io/posts/x86_quirks/" />
+
+  <meta property="og:description" content="x86 programming has a lot of backwards compatibility that can be quite interesting &ndash; "/> 
+
+<meta property="og:locale" content="en" />
+<meta property="og:image" content="" /></head>
+
+    <body>
+        <div class="page">
+
+            <header class="page__header"><nav class="page__nav main-nav">
+    <ul>
+      <li class="nomarker"><h1 class="page__logo"><a href="https://risotto.joeroe.io/" class="page__logo-inner">aaban akhtar</a></h1></li>
+    
+    
+    <li class="main-nav__item"><a class="nav-main-item active" href="https://risotto.joeroe.io/posts/" title="Posts">Posts</a></li>
+    
+    </ul>
+</nav>
+
+</header>
+
+            <section class="page__body">
+    <header class="content__header">
+        <h1>Quirks of x86 OSDev</h1>
+    </header>
+    <div class="content__body">
+        <p>I&rsquo;m writing an operating system called <strong>Twig</strong>, and it&rsquo;s been quite the fun experience. However, there&rsquo;s been a lot of friction between my codebase and the x86 architecture. The amount of code needed purely for <em>backwards compatibility</em> reasons is surprising — and kind of annoying, too.</p>
+<h1 id="the-8086">The 8086</h1>
+<p>x86 — the architecture that most modern desktops and laptops use — is rooted in the Intel <strong>8086</strong>, a 16-bit chip released in the <strong>late 1970s</strong>. That legacy still echoes throughout modern systems. Even though we now have powerful 64-bit CPUs, much of the architecture still supports old 16-bit conventions to ensure software written decades ago still runs. This preservation brings with it a host of quirks for OS developers — quirks that I’ve run into firsthand while writing Twig.</p>
+<h1 id="cpu-modes">CPU Modes</h1>
+<p>Modern CPUs run in <strong>64-bit mode</strong>, but they don’t <em>start</em> that way. When a machine boots, it powers up in <strong>real mode</strong>, which mimics the original 8086 environment: 16-bit, with access to only 1MB of memory, no protection, and no paging.</p>
+<p>To do anything useful, you have to transition to <strong>protected mode</strong> (32-bit) or <strong>long mode</strong> (64-bit). This requires jumping through several hoops — setting up descriptor tables, enabling the A20 line, and flipping control registers. You can do this manually in your bootloader, or (as I did) let something like <strong>GRUB</strong> handle it for you.</p>
+<h1 id="the-gdt">The GDT</h1>
+<p>The <strong>Global Descriptor Table (GDT)</strong> is a relic from protected mode, defining memory segments and access levels. Although paging has largely replaced segmentation in modern systems, the GDT is still required — even in 64-bit mode — to define things like <strong>code and data segments</strong>.</p>
+<p>Setting up the GDT isn’t conceptually difficult, but the syntax is incredibly verbose and fiddly, especially if you&rsquo;re new to bit-level programming. For example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>setGDTEntry(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);             <span style="color:#75715e">// Null descriptor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>setGDTEntry(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x9A</span>, <span style="color:#ae81ff">0xC</span>, <span style="color:#ae81ff">0xFFFFFFFF</span>); <span style="color:#75715e">// Kernel code segment
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>setGDTEntry(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x92</span>, <span style="color:#ae81ff">0xC</span>, <span style="color:#ae81ff">0xFFFFFFFF</span>); <span style="color:#75715e">// Kernel data segment
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>setGDTEntry(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0xC</span>, <span style="color:#ae81ff">0xFFFFFFFF</span>); <span style="color:#75715e">// User code segment (ring 3)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>setGDTEntry(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0xC</span>, <span style="color:#ae81ff">0xFFFFFFFF</span>); <span style="color:#75715e">// User data segment (ring 3)
+</span></span></span></code></pre></div><p>Most modern kernels just make these segments span the entire address space and move on, since paging does the real memory management. But you <em>still</em> have to deal with it — purely because of legacy constraints.</p>
+<h1 id="the-pic-programmable-interrupt-controller">The PIC (Programmable Interrupt Controller)</h1>
+<p>One of the <em>most annoying</em> legacy features I encountered was the <strong>Programmable Interrupt Controller (PIC)</strong>. The original Intel 8259 PIC is still present (or emulated) on modern systems for legacy support — even though most CPUs now use the <strong>APIC</strong> (Advanced PIC).</p>
+<p>The PIC maps hardware interrupt vectors to low-numbered IRQs that <em>overlap</em> with CPU exceptions (like divide-by-zero). This means you <strong>must remap</strong> the PIC to avoid conflicts — typically moving the IRQs to vectors 32–47:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>outb(<span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x11</span>); <span style="color:#75715e">// Init PIC1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0x11</span>); <span style="color:#75715e">// Init PIC2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x20</span>); <span style="color:#75715e">// PIC1 offset to 0x20
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0x28</span>); <span style="color:#75715e">// PIC2 offset to 0x28
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x04</span>); <span style="color:#75715e">// Tell PIC1 about PIC2 at IRQ2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0x02</span>); <span style="color:#75715e">// Tell PIC2 its cascade identity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x01</span>); <span style="color:#75715e">// Set 8086 mode
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>outb(<span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0x01</span>);
+</span></span></code></pre></div><h1 id="the-idt-and-cpu-exceptions">The IDT and CPU Exceptions</h1>
+<p>Once interrupts are flowing correctly, you need an Interrupt Descriptor Table (IDT). This table tells the CPU what function to call when a given interrupt or exception occurs.</p>
+<p>Writing the IDT isn’t too hard once you understand how entries work — but the hardest part for me was writing ISRs (Interrupt Service Routines) in assembly, especially ones that saved and restored CPU state. Also, the first 32 vectors (0–31) are reserved for CPU exceptions, like:</p>
+<ul>
+<li>
+<p>0: Divide-by-zero</p>
+</li>
+<li>
+<p>6: Invalid opcode</p>
+</li>
+<li>
+<p>13: General protection fault</p>
+</li>
+<li>
+<p>14: Page fault</p>
+</li>
+</ul>
+<p>Here’s a quick snippet from my code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">isr0</span>(); <span style="color:#75715e">// divide-by-zero
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">isr13</span>(); <span style="color:#75715e">// general protection fault
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">isr14</span>(); <span style="color:#75715e">// page fault
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">setIDTEntry</span>(<span style="color:#ae81ff">0</span>, (<span style="color:#66d9ef">uintptr_t</span>)isr0, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x8E</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">setIDTEntry</span>(<span style="color:#ae81ff">13</span>, (<span style="color:#66d9ef">uintptr_t</span>)isr13, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x8E</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">setIDTEntry</span>(<span style="color:#ae81ff">14</span>, (<span style="color:#66d9ef">uintptr_t</span>)isr14, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x8E</span>);
+</span></span></code></pre></div><p>And for debugging, it’s absolutely worth adding code that prints the interrupt number and error code, because otherwise you’re flying blind.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Backwards compatibility is both a gift and a curse. It lets modern systems run code from the &rsquo;80s, but it also forces OS developers to learn and implement layers of legacy infrastructure — from segment descriptors to remapping PIC interrupts and handling CPU faults through the IDT.</p>
+<p>Twig has taught me a lot about this architecture. As frustrating as it can be, there&rsquo;s something oddly satisfying about wrestling with the guts of a computer at this level. Here&rsquo;s to continuing the journey.</p>
+
+<style>
+.canon { background: white; width: 100%; height: auto; }
+</style>
+
+
+    </div>
+    <footer class="content__footer"></footer>
+
+            </section>
+
+            <section class="page__aside">
+                <div class="aside__about">
+<div class="aside__about">
+    <span class="about__logo" role="img">👋</span>&nbsp;
+    
+<h1 class="about__title">About Me</h1>
+<p class="about__description">Sophomore at North Wake College and Career Academy. I&rsquo;m passionate about robotics, systems programming, and building impactful tech projects. This site showcases my work, ideas, and journey.</p>
+</div>
+
+
+<ul class="aside__social-links">
+    
+    <li>
+        <a href="https://github.com/aabanakhtar-github" rel="me" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="mailto:aabanakhtar.home@gmail.com" rel="me" aria-label="Email" title="Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+    <li>
+        <a href="https://orcid.org/0000-0001-2345-6789" rel="me" aria-label="ORCID" title="ORCID"><i class="ai ai-orcid" aria-hidden="true"></i></a>&nbsp;
+    </li>
+    
+</ul>
+</div>
+                <hr>
+                <div class="aside__content">
+    <p>x86 programming has a lot of backwards compatibility that can be quite interesting</p>
+    
+        <p>
+            By Aaban Akhtar, 
+            2025-06-17
+        </p>
+    
+
+    
+
+                </div>
+            </section>
+
+            <footer class="page__footer"><p>
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+      
+      
+          
+            
+            
+
+            
+          
+      
+    
+</p>
+<br /><br />
+<p class="copyright">© <a href="aabanakhtar.github.io">Aaban Akhtar</a></p>
+</footer>
+
+        </div>
+    </body>
+
+</html>
