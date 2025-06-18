@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emulators on aaban akhtar</title>
+    <link>aabanakhtar-github.github.io/about/tags/emulators/</link>
+    <description>Recent content in Emulators on aaban akhtar</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>© [Aaban Akhtar](aabanakhtar.github.io)</copyright>
+    <lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="aabanakhtar-github.github.io/about/tags/emulators/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What writing a 6502 emulator taught me about CPUs</title>
+      <link>aabanakhtar-github.github.io/about/posts/6502/</link>
+      <pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>aabanakhtar-github.github.io/about/posts/6502/</guid>
+      <description>&lt;h1 id=&#34;coming-soon&#34;&gt;coming soon&lt;/h1&gt;</description>
+    </item>
+  </channel>
+</rss>
