@@ -2,23 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://risotto.joeroe.io/</loc>
+    <loc>//localhost:1313/about/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/tags/osdev/</loc>
+    <loc>//localhost:1313/about/tags/emulators/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/posts/</loc>
+    <loc>//localhost:1313/about/tags/osdev/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/posts/x86_quirks/</loc>
+    <loc>//localhost:1313/about/posts/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/tags/</loc>
+    <loc>//localhost:1313/about/posts/x86_quirks/</loc>
     <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/categories/</loc>
+    <loc>//localhost:1313/about/tags/</loc>
+    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://risotto.joeroe.io/series/</loc>
+    <loc>//localhost:1313/about/posts/6502/</loc>
+    <lastmod>2025-06-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>//localhost:1313/about/categories/</loc>
+  </url><url>
+    <loc>//localhost:1313/about/series/</loc>
   </url>
 </urlset>
